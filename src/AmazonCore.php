@@ -97,6 +97,8 @@ use Exception;
  */
 abstract class AmazonCore
 {
+
+    //
     protected $urlbase;
     protected $urlbranch;
     protected $throttleLimit;
