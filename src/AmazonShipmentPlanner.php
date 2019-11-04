@@ -51,6 +51,13 @@ class AmazonShipmentPlanner extends AmazonInboundCore implements \Iterator
         $this->options['Action'] = 'CreateInboundShipmentPlan';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
     /**
      * Sets the address. (Required)
      *
@@ -73,7 +80,7 @@ class AmazonShipmentPlanner extends AmazonInboundCore implements \Iterator
     public function setAddress($a)
     {
         if (!$a || is_null($a) || is_string($a)) {
-            $this->log("Tried to set address to invalid values", 'Warning');
+            $this->log("Tried to set address to invalid values", 'Warning',$this->cacheKey);
             return false;
         }
         $this->resetAddress();
@@ -174,7 +181,7 @@ class AmazonShipmentPlanner extends AmazonInboundCore implements \Iterator
     public function setItems($a)
     {
         if (!$a || is_null($a) || is_string($a)) {
-            $this->log("Tried to set Items to invalid values", 'Warning');
+            $this->log("Tried to set Items to invalid values", 'Warning',$this->cacheKey);
             return false;
         }
         $this->resetItems();
@@ -192,7 +199,7 @@ class AmazonShipmentPlanner extends AmazonInboundCore implements \Iterator
                 $i++;
             } else {
                 $this->resetItems();
-                $this->log("Tried to set Items with invalid array", 'Warning');
+                $this->log("Tried to set Items with invalid array", 'Warning',$this->cacheKey);
                 return false;
             }
         }
@@ -225,11 +232,11 @@ class AmazonShipmentPlanner extends AmazonInboundCore implements \Iterator
     public function fetchPlan()
     {
         if (!array_key_exists('ShipFromAddress.Name', $this->options)) {
-            $this->log("Address must be set in order to make a plan", 'Warning');
+            $this->log("Address must be set in order to make a plan", 'Warning',$this->cacheKey);
             return false;
         }
         if (!array_key_exists('InboundShipmentPlanRequestItems.member.1.SellerSKU', $this->options)) {
-            $this->log("Items must be set in order to make a plan", 'Warning');
+            $this->log("Items must be set in order to make a plan", 'Warning',$this->cacheKey);
             return false;
         }
 
@@ -243,7 +250,7 @@ class AmazonShipmentPlanner extends AmazonInboundCore implements \Iterator
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 

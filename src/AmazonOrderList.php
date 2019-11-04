@@ -63,7 +63,7 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
         if (isset($store[$s]) && array_key_exists('marketplaceId', $store[$s])) {
             $this->options['MarketplaceId.Id.1'] = $store[$s]['marketplaceId'];
         } else {
-            $this->log("Marketplace ID is missing", 'Urgent');
+            $this->log("Marketplace ID is missing", 'Urgent',$this->cacheKey);
         }
 
         if (isset($THROTTLE_LIMIT_ORDERLIST)) {
@@ -75,6 +75,13 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
         $this->throttleGroup = 'ListOrders';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
     /**
      * Returns whether or not a token is available.
      * @return boolean
@@ -144,13 +151,13 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
                     unset($this->options['CreatedAfter']);
                     unset($this->options['CreatedBefore']);
                 } else {
-                    $this->log('First parameter should be either "Created" or "Modified".', 'Warning');
+                    $this->log('First parameter should be either "Created" or "Modified".', 'Warning',$this->cacheKey);
                     return false;
                 }
             }
 
         } catch (\Exception $e) {
-            $this->log('Error: ' . $e->getMessage(), 'Warning');
+            $this->log('Error: ' . $e->getMessage(), 'Warning',$this->cacheKey);
             return false;
         }
 
@@ -371,7 +378,7 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 

@@ -27,7 +27,7 @@ use Sonnenglas\AmazonMws\AmazonInboundCore;
  * create or update a shipment, information from a Shipment Plan is required.
  * Use the AmazonShipmentPlanner object to retrieve this information.
  */
-class AmazonPackageLabels extends AmazonInboundCore
+class AmazonUniquePackageLabels extends AmazonInboundCore
 {
     private $shipmentId;
     private $PdfDocument;
@@ -112,10 +112,13 @@ class AmazonPackageLabels extends AmazonInboundCore
      * @return boolean <b>FALSE</b> if improper input
      */
 
-    public function setNumberOfPackages($s)
+
+    public function setPackageLabelsToPrint($s)
     {
-        if (is_integer($s) && $s) {
-            $this->options['NumberOfPackages'] = $s;
+        if (is_integer($s) && $s  ) {
+            for ($x=1; $x<=$s; $x++) {
+                $this->options['PackageLabelsToPrint.member.'.$x] = $x;
+            }
         } else {
             return false;
         }
@@ -144,7 +147,7 @@ class AmazonPackageLabels extends AmazonInboundCore
      */
     public function getPackageLabels()
     {
-        $this->options['Action'] = 'GetPackageLabels';
+        $this->options['Action'] = 'GetUniquePackageLabels';
 
         $url = $this->urlbase . $this->urlbranch;
 

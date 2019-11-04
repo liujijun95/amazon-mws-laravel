@@ -68,6 +68,14 @@ class AmazonOrderItemList extends AmazonOrderCore implements Iterator
         $this->throttleGroup = 'ListOrderItems';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Returns whether or not a token is available.
      * @return boolean
@@ -138,7 +146,7 @@ class AmazonOrderItemList extends AmazonOrderCore implements Iterator
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 
@@ -146,12 +154,12 @@ class AmazonOrderItemList extends AmazonOrderCore implements Iterator
         }
 
         if (is_null($xml->AmazonOrderId)) {
-            $this->log("You just got throttled.", 'Warning');
+            $this->log("You just got throttled.", 'Warning',$this->cacheKey);
             return false;
         } else {
             if (isset($this->options['AmazonOrderId']) && $this->options['AmazonOrderId'] && $this->options['AmazonOrderId'] != $xml->AmazonOrderId) {
                 $this->log('You grabbed the wrong Order\'s items! - ' . $this->options['AmazonOrderId'] . ' =/= ' . $xml->AmazonOrderId,
-                    'Urgent');
+                    'Urgent',$this->cacheKey);
             }
         }
 

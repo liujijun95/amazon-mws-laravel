@@ -60,6 +60,14 @@ class AmazonShipmentItemList extends AmazonInboundCore implements \Iterator
         }
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Returns whether or not a token is available.
      * @return boolean
@@ -170,7 +178,7 @@ class AmazonShipmentItemList extends AmazonInboundCore implements \Iterator
     public function fetchItems($r = true)
     {
         if (!array_key_exists('ShipmentId', $this->options)) {
-            $this->log("Shipment ID must be set before requesting items!", 'Warning');
+            $this->log("Shipment ID must be set before requesting items!", 'Warning',$this->cacheKey);
             return false;
         }
 
@@ -186,7 +194,7 @@ class AmazonShipmentItemList extends AmazonInboundCore implements \Iterator
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 

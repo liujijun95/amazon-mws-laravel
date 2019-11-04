@@ -1,5 +1,6 @@
 <?php namespace Sonnenglas\AmazonMws;
 
+use Illuminate\Support\Facades\Storage;
 use Sonnenglas\AmazonMws\AmazonFeedsCore;
 /**
  * Copyright 2013 CPI Group, LLC
@@ -66,6 +67,14 @@ class AmazonFeedResult extends AmazonFeedsCore
         $this->throttleGroup = 'GetFeedSubmissionResult';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Sets the feed submission ID for the next request. (Required)
      *
@@ -94,7 +103,7 @@ class AmazonFeedResult extends AmazonFeedsCore
     public function fetchFeedResult()
     {
         if (!array_key_exists('FeedSubmissionId', $this->options)) {
-            $this->log("Feed Submission ID must be set in order to fetch it!", 'Warning');
+            $this->log("Feed Submission ID must be set in order to fetch it!", 'Warning',$this->cacheKey);
             return false;
         }
 
@@ -107,9 +116,12 @@ class AmazonFeedResult extends AmazonFeedsCore
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
+
+            $xml = simplexml_load_string($response['body']);
+            $this->parseXML($xml->Message);
 
             $this->rawFeed = $response['body'];
         }
@@ -125,15 +137,17 @@ class AmazonFeedResult extends AmazonFeedsCore
      */
     public function saveFeed($path)
     {
+
         if (!isset($this->rawFeed)) {
             return false;
         }
         try {
-            file_put_contents($path, $this->rawFeed);
+            //file_put_contents($path, $this->rawFeed);
+            Storage::put($path, $this->rawFeed, 'public');
             $this->log("Successfully saved feed #" . $this->options['FeedSubmissionId'] . " at $path");
         } catch (Exception $e) {
             $this->log("Unable to save feed #" . $this->options['FeedSubmissionId'] . " at $path: " . $e->getMessage(),
-                'Urgent');
+                'Urgent',$this->cacheKey);
             return false;
         }
     }
@@ -149,7 +163,39 @@ class AmazonFeedResult extends AmazonFeedsCore
         if (!isset($this->rawFeed)) {
             return false;
         }
+
         return $this->rawFeed;
+    }
+
+    public function getResponse()
+    {
+        if (!isset($this->response)) {
+            return false;
+        }
+
+        return $this->response;
+    }
+
+    /**
+     * Parses XML response into array.
+     *
+     * This is what reads the response XML and converts it into an array.
+     * @param SimpleXMLObject $xml <p>The XML response from Amazon.</p>
+     * @return boolean <b>FALSE</b> if no XML data is found
+     */
+    protected function parseXML($xml)
+    {
+        if (!$xml) {
+            return false;
+        }
+
+        $this->response = array();
+        $this->response['ProcessingSummary'] = (array)$xml->ProcessingReport->ProcessingSummary;
+        $this->response['Result'] = (array)$xml->ProcessingReport->Result;
+        $this->response['StatusCode'] = (string)$xml->ProcessingReport->StatusCode;
+        $this->response['DocumentTransactionID'] = (string)$xml->ProcessingReport->DocumentTransactionID;
+
+        return $this->response;
     }
 
 }

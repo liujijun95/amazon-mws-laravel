@@ -53,6 +53,13 @@ class AmazonShipmentList extends AmazonInboundCore implements \Iterator
         parent::__construct($s, $mock, $m);
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
     /**
      * Returns whether or not a token is available.
      * @return boolean
@@ -245,7 +252,7 @@ class AmazonShipmentList extends AmazonInboundCore implements \Iterator
         if (!array_key_exists('ShipmentStatusList.member.1',
                 $this->options) && !array_key_exists('ShipmentIdList.member.1', $this->options)
         ) {
-            $this->log("Either status filter or ID filter must be set before requesting a list!", 'Warning');
+            $this->log("Either status filter or ID filter must be set before requesting a list!", 'Warning',$this->cacheKey);
             return false;
         }
 
@@ -261,7 +268,7 @@ class AmazonShipmentList extends AmazonInboundCore implements \Iterator
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 

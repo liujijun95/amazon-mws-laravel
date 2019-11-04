@@ -50,6 +50,14 @@ class AmazonShipment extends AmazonInboundCore
         $this->options['InboundShipmentHeader.ShipmentStatus'] = 'WORKING';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Automatically fills in the necessary fields using a planner array.
      *
@@ -72,7 +80,7 @@ class AmazonShipment extends AmazonInboundCore
             $this->setItems($x['Items']);
 
         } else {
-            $this->log("usePlan requires an array", 'Warning');
+            $this->log("usePlan requires an array", 'Warning',$this->cacheKey);
             return false;
         }
     }
@@ -99,12 +107,12 @@ class AmazonShipment extends AmazonInboundCore
     public function setAddress($a)
     {
         if (!$a || is_null($a) || is_string($a)) {
-            $this->log("Tried to set address to invalid values", 'Warning');
+            $this->log("Tried to set address to invalid values", 'Warning',$this->cacheKey);
             return false;
         }
         if (!array_key_exists('AddressLine1', $a)) {
             $this->resetAddress();
-            $this->log("Tried to set address with invalid array", 'Warning');
+            $this->log("Tried to set address with invalid array", 'Warning',$this->cacheKey);
             return false;
         }
         $this->resetAddress();
@@ -161,7 +169,7 @@ class AmazonShipment extends AmazonInboundCore
     public function setItems($a)
     {
         if (!$a || is_null($a) || is_string($a)) {
-            $this->log("Tried to set Items to invalid values", 'Warning');
+            $this->log("Tried to set Items to invalid values", 'Warning',$this->cacheKey);
             return false;
         }
         $this->resetItems();
@@ -179,7 +187,7 @@ class AmazonShipment extends AmazonInboundCore
                 $i++;
             } else {
                 $this->resetItems();
-                $this->log("Tried to set Items with invalid array", 'Warning');
+                $this->log("Tried to set Items with invalid array", 'Warning',$this->cacheKey);
                 return false;
             }
         }
@@ -258,15 +266,15 @@ class AmazonShipment extends AmazonInboundCore
     public function createShipment()
     {
         if (!isset($this->options['ShipmentId'])) {
-            $this->log("Shipment ID must be set in order to create it", 'Warning');
+            $this->log("Shipment ID must be set in order to create it", 'Warning',$this->cacheKey);
             return false;
         }
         if (!array_key_exists('InboundShipmentHeader.ShipFromAddress.Name', $this->options)) {
-            $this->log("Header must be set in order to make a shipment", 'Warning');
+            $this->log("Header must be set in order to make a shipment", 'Warning',$this->cacheKey);
             return false;
         }
         if (!array_key_exists('InboundShipmentItems.member.1.SellerSKU', $this->options)) {
-            $this->log("Items must be set in order to make a shipment", 'Warning');
+            $this->log("Items must be set in order to make a shipment", 'Warning',$this->cacheKey);
             return false;
         }
         $this->options['Action'] = 'CreateInboundShipment';
@@ -281,7 +289,7 @@ class AmazonShipment extends AmazonInboundCore
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 
@@ -309,15 +317,15 @@ class AmazonShipment extends AmazonInboundCore
     public function updateShipment()
     {
         if (!isset($this->options['ShipmentId'])) {
-            $this->log("Shipment ID must be set in order to update it", 'Warning');
+            $this->log("Shipment ID must be set in order to update it", 'Warning',$this->cacheKey);
             return false;
         }
         if (!array_key_exists('InboundShipmentHeader.ShipFromAddress.Name', $this->options)) {
-            $this->log("Header must be set in order to update a shipment", 'Warning');
+            $this->log("Header must be set in order to update a shipment", 'Warning',$this->cacheKey);
             return false;
         }
         if (!array_key_exists('InboundShipmentItems.member.1.SellerSKU', $this->options)) {
-            $this->log("Items must be set in order to update a shipment", 'Warning');
+            $this->log("Items must be set in order to update a shipment", 'Warning',$this->cacheKey);
             return false;
         }
         $this->options['Action'] = 'UpdateInboundShipment';

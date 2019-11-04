@@ -3,6 +3,7 @@
 use Config, Log;
 use DateTime;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 
 
 /**
@@ -98,8 +99,7 @@ use Exception;
 abstract class AmazonCore
 {
 
-    //test
-    //55
+    //
     protected $urlbase;
     protected $urlbranch;
     protected $throttleLimit;
@@ -357,10 +357,10 @@ abstract class AmazonCore
      * the fields <i>code</i>, <i>body</i>, and <i>error</i>.</p>
      * @return boolean <b>TRUE</b> if the status is 200 OK, <b>FALSE</b> otherwise.
      */
-    protected function checkResponse($r)
+    protected function checkResponse($r,$cachekey='888888')
     {
         if (!is_array($r) || !array_key_exists('code', $r)) {
-            $this->log("No Response found", 'Warning');
+            $this->log("No Response found", 'Warning',$cachekey);
             return false;
         }
         if ($r['code'] == 200) {
@@ -368,7 +368,7 @@ abstract class AmazonCore
         } else {
             $xml = simplexml_load_string($r['body'])->Error;
             $this->log("Bad Response! " . $r['code'] . " " . $r['error'] . ": " . $xml->Code . " - " . $xml->Message,
-                'Urgent');
+                'Urgent',$cachekey);
             return false;
         }
     }
@@ -477,8 +477,11 @@ abstract class AmazonCore
      * @return boolean <b>FALSE</b> if the message is empty, NULL if logging is muted
      * @throws Exception If the file can't be written to.
      */
-    protected function log($msg, $level = 'Info')
+    protected function log($msg, $level = 'Info',$cachekey='888888')
     {
+        Cache::put($cachekey, $msg, 120);
+        echo $msg;
+        echo '</br>';
         if ($msg != false) {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
@@ -617,6 +620,7 @@ abstract class AmazonCore
      */
     protected function sendRequest($url, $param)
     {
+
         $this->log("Making request to Amazon: " . $this->options['Action']);
         $response = $this->fetchURL($url, $param);
 

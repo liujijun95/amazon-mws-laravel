@@ -62,6 +62,14 @@ class AmazonFeedList extends AmazonFeedsCore implements Iterator{
             $this->throttleTime = $THROTTLE_TIME_FEEDLIST;
         }
     }
+
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
     
     /**
      * Returns whether or not a token is available.
@@ -280,8 +288,8 @@ class AmazonFeedList extends AmazonFeedsCore implements Iterator{
            $xml = $this->fetchMockFile()->$path;
         } else {
             $response = $this->sendRequest($url, array('Post'=>$query));
-            
-            if (!$this->checkResponse($response)){
+
+            if (!$this->checkResponse($response,$this->cacheKey)){
                 return false;
             }
             
@@ -391,7 +399,7 @@ class AmazonFeedList extends AmazonFeedsCore implements Iterator{
         } else {
             $response = $this->sendRequest($url, array('Post'=>$query));
             
-            if (!$this->checkResponse($response)){
+            if (!$this->checkResponse($response,$this->cacheKey)){
                 return false;
             }
             
@@ -445,8 +453,7 @@ class AmazonFeedList extends AmazonFeedsCore implements Iterator{
            $xml = $this->fetchMockFile()->$path;
         } else {
             $response = $this->sendRequest($url, array('Post'=>$query));
-            
-            if (!$this->checkResponse($response)){
+            if (!$this->checkResponse($response, $this->cacheKey)){
                 return false;
             }
             

@@ -67,6 +67,14 @@ class AmazonOrder extends AmazonOrderCore
         $this->throttleGroup = 'GetOrder';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Sets the Amazon Order ID. (Required)
      *

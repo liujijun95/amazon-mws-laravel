@@ -61,6 +61,13 @@ class AmazonFeed extends AmazonFeedsCore
         $this->throttleGroup = 'SubmitFeed';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
     /**
      * Sets the Feed Content. (Required)
      *
@@ -98,6 +105,9 @@ class AmazonFeed extends AmazonFeedsCore
                 $this->feedContent = file_get_contents($url);
             }
             $this->feedMD5 = base64_encode(md5($this->feedContent, true));
+        }else{
+            $this->log("FBA inbound xml file not exit", 'Warning',$this->cacheKey);
+            return false;
         }
     }
 
@@ -247,11 +257,11 @@ class AmazonFeed extends AmazonFeedsCore
     public function submitFeed()
     {
         if (!$this->feedContent) {
-            $this->log("Feed's contents must be set in order to submit it!", 'Warning');
+            $this->log("Feed's contents must be set in order to submit it!", 'Warning',$this->cacheKey);
             return false;
         }
         if (!array_key_exists('FeedType', $this->options)) {
-            $this->log("Feed Type must be set in order to submit a feed!", 'Warning');
+            $this->log("Feed Type must be set in order to submit a feed!", 'Warning',$this->cacheKey);
             return false;
         }
 
@@ -274,7 +284,7 @@ class AmazonFeed extends AmazonFeedsCore
                 $body = strstr($response['body'], '<');
                 $xml = simplexml_load_string($body)->$path;
             } else {
-                $this->log("Unexpected response: " . print_r($response, true), 'Warning');
+                $this->log("Unexpected response: " . print_r($response, true), 'Warning',$this->cacheKey);
                 $xml = simplexml_load_string($response['body'])->$path;
             }
 
@@ -333,12 +343,12 @@ class AmazonFeed extends AmazonFeedsCore
     protected function checkResponse($r)
     {
         if (!is_array($r)) {
-            $this->log("No Response found", 'Warning');
+            $this->log("No Response found", 'Warning',$this->cacheKey);
             return false;
         }
         //for dealing with 100 response
         if (array_key_exists('error', $r) && $r['ok'] == 0) {
-            $this->log("Response Not OK! Error: " . $r['error'], 'Urgent');
+            $this->log("Response Not OK! Error: " . $r['error'], 'Urgent',$this->cacheKey);
             return false;
         } else {
             $this->log("Response OK!");
