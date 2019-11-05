@@ -99,7 +99,6 @@ use Illuminate\Support\Facades\Cache;
 abstract class AmazonCore
 {
 
-    //
     protected $urlbase;
     protected $urlbranch;
     protected $throttleLimit;
