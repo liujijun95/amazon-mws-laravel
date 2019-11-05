@@ -367,7 +367,7 @@ abstract class AmazonCore
             return true;
         } else {
             $xml = simplexml_load_string($r['body'])->Error;
-            $this->log("Bad Response! " . $r['code'] . " " . $r['error'] . ": " . $xml->Code . " - " . $xml->Message,
+            $this->log( $r['code'] . " " . $r['error'] . ": " . $xml->Code . " - " . $xml->Message,
                 'Urgent',$cachekey);
             return false;
         }
@@ -480,8 +480,6 @@ abstract class AmazonCore
     protected function log($msg, $level = 'Info',$cachekey='888888')
     {
         Cache::put($cachekey, $msg, 120);
-        echo $msg;
-        echo '</br>';
         if ($msg != false) {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 

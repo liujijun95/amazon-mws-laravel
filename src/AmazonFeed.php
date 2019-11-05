@@ -340,15 +340,15 @@ class AmazonFeed extends AmazonFeedsCore
      * the fields <i>code</i>, <i>body</i>, and <i>error</i>.</p>
      * @return boolean <b>TRUE</b> if the status is 200 OK, <b>FALSE</b> otherwise.
      */
-    protected function checkResponse($r)
+    protected function checkResponse($r,$cachekey='888888')
     {
         if (!is_array($r)) {
-            $this->log("No Response found", 'Warning',$this->cacheKey);
+            $this->log("No Response found", 'Warning',$cachekey);
             return false;
         }
         //for dealing with 100 response
         if (array_key_exists('error', $r) && $r['ok'] == 0) {
-            $this->log("Response Not OK! Error: " . $r['error'], 'Urgent',$this->cacheKey);
+            $this->log("Response Not OK! Error: " . $r['error'], 'Urgent',$cachekey);
             return false;
         } else {
             $this->log("Response OK!");
