@@ -1,5 +1,6 @@
 <?php namespace Sonnenglas\AmazonMws;
 
+use Carbon\Carbon;
 use Config, Log;
 use DateTime;
 use Exception;
@@ -564,7 +565,7 @@ abstract class AmazonCore
     protected function genTime($time = false)
     {
         if (!$time) {
-            $time = time();
+            $time = Carbon::now()->timestamp;
         } else if (is_numeric($time)) {
             $time = (int)$time;
         } else if (is_string($time)) {
