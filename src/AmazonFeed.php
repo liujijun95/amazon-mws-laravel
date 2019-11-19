@@ -276,7 +276,7 @@ class AmazonFeed extends AmazonFeedsCore
             $headers = $this->genHeader();
             $response = $this->sendRequest("$url?$query", array('Header' => $headers, 'Post' => $this->feedContent));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 
