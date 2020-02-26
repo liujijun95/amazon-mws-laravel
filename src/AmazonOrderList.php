@@ -557,7 +557,6 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
         $this->i++;
     }
 
-
     /**
      * Iterator function
      * @return type
