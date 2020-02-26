@@ -220,7 +220,9 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
             $this->options['FulfillmentChannel.Channel.1'] = $filter;
         } else {
             if (is_null($filter)) {
-                unset($this->options['FulfillmentChannel.Channel.1']);
+                //$this->options['FulfillmentChannel.Channel.1'] = 'AFN';
+                //$this->options['FulfillmentChannel.Channel.2'] = 'MFN';
+                //unset($this->options['FulfillmentChannel.Channel.1']);
             } else {
                 return false;
             }
@@ -349,6 +351,24 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
         }
     }
 
+    public function setCreatedAfter($t)
+    {
+        if ($t) {
+            $this->options['CreatedAfter'] = $t;
+        } else {
+            return false;
+        }
+    }
+
+    public function setCreatedBefore($t)
+    {
+        if ($t) {
+            $this->options['CreatedBefore'] = $t;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Fetches orders from Amazon and puts them in an array of <i>AmazonOrder</i> objects.
      *
@@ -360,6 +380,8 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
      */
     public function fetchOrders($r = true)
     {
+        //$this->options['CreatedAfter']='2019-01-01T00:00:00+08:00';
+        //$this->options['CreatedBefore']='2019-01-02T00:00:00+08:00';
         if (!array_key_exists('CreatedAfter', $this->options) && !array_key_exists('LastUpdatedAfter',
                 $this->options)
         ) {
@@ -377,6 +399,7 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
             $xml = $this->fetchMockFile()->$path;
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
+
 
             if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
