@@ -58,6 +58,32 @@ class AmazonShipmentPlanner extends AmazonInboundCore implements \Iterator
             return false;
         }
     }
+    public function setShipToCountryCode($country_code = ''){
+        if ($country_code){
+            $this->options['ShipToCountryCode']=$country_code;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Sets the marketplace Id
+     *
+     * @param null $id
+     * @return bool
+     */
+    public function setMarketPlaceId($id = null)
+    {
+        if (!$id && $this->marketplaceId) {
+            $id = $this->marketplaceId;
+        }
+        if ($id) {
+            $this->options['MarketplaceId'] = $id;
+            return true;
+        }
+        return false;
+    }
     /**
      * Sets the address. (Required)
      *
@@ -195,6 +221,9 @@ class AmazonShipmentPlanner extends AmazonInboundCore implements \Iterator
                 }
                 if (array_key_exists('Condition', $x)) {
                     $this->options['InboundShipmentPlanRequestItems.member.' . $i . '.Condition'] = $x['Condition'];
+                }
+                if (array_key_exists('ASIN', $x)) {
+                    $this->options['InboundShipmentPlanRequestItems.member.' . $i . '.ASIN'] = $x['ASIN'];
                 }
                 $i++;
             } else {
