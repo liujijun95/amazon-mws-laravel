@@ -1,5 +1,6 @@
 <?php namespace Sonnenglas\AmazonMws;
 
+use Illuminate\Support\Facades\Storage;
 use Sonnenglas\AmazonMws\AmazonReportsCore;
 
 /**
@@ -65,6 +66,14 @@ class AmazonReport extends AmazonReportsCore
         }
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Sets the report ID. (Required)
      *
@@ -107,10 +116,9 @@ class AmazonReport extends AmazonReportsCore
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
-
             $this->rawreport = $response['body'];
         }
         return $this->rawreport;
@@ -127,7 +135,8 @@ class AmazonReport extends AmazonReportsCore
             return false;
         }
         try {
-            file_put_contents($path, $this->rawreport);
+            //file_put_contents($path, $this->rawreport);
+            Storage::put($path, $this->rawreport, 'public');
             $this->log("Successfully saved report #" . $this->options['ReportId'] . " at $path");
             return true;
         } catch (Exception $e) {

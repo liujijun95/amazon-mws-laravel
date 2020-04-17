@@ -57,6 +57,13 @@ class AmazonReportRequest extends AmazonReportsCore
         }
         $this->throttleGroup = 'RequestReport';
     }
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Sets the report type. (Required)
@@ -263,7 +270,7 @@ class AmazonReportRequest extends AmazonReportsCore
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 

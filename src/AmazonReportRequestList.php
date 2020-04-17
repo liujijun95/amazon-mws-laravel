@@ -63,6 +63,14 @@ class AmazonReportRequestList extends AmazonReportsCore implements \Iterator
         }
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Returns whether or not a token is available.
      * @return boolean
@@ -296,7 +304,7 @@ class AmazonReportRequestList extends AmazonReportsCore implements \Iterator
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 
