@@ -799,7 +799,6 @@ class AmazonReportRequestList extends AmazonReportsCore implements \Iterator
     }
 
 
-
 }
 
 ?>
