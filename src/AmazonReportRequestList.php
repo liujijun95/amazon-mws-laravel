@@ -798,6 +798,7 @@ class AmazonReportRequestList extends AmazonReportsCore implements \Iterator
         return isset($this->reportList[$this->i]);
     }
 
+
 }
 
 ?>
