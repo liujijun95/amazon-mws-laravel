@@ -56,6 +56,14 @@ class AmazonProductList extends AmazonProductsCore implements \Iterator
         $this->throttleGroup = 'GetMatchingProductForId';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Sets the ID type. (Required)
      *
@@ -139,7 +147,7 @@ class AmazonProductList extends AmazonProductsCore implements \Iterator
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 

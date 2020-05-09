@@ -79,6 +79,23 @@ class AmazonProductInfo extends AmazonProductsCore
         }
     }
 
+    public function setMarketplaceIds($s)
+    {
+        if (is_string($s)) {
+            $this->options['MarketplaceId'] = $s;
+        } else {
+            if (is_array($s)) {
+                $i = 1;
+                foreach ($s as $x) {
+                    $this->options['MarketplaceId.' . $i] = $x;
+                    $i++;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+
     /**
      * Resets the seller SKU options.
      *
@@ -400,7 +417,6 @@ class AmazonProductInfo extends AmazonProductsCore
             $xml = $this->fetchMockFile();
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
-
             if (!$this->checkResponse($response)) {
                 return false;
             }
@@ -430,10 +446,12 @@ class AmazonProductInfo extends AmazonProductsCore
         unset($this->options['ExcludeMe']);
         unset($this->options['ItemCondition']);
         if (array_key_exists('SellerSKUList.SellerSKU.1', $this->options)) {
+            $this->options['SellerSKU']=$this->options['SellerSKUList.SellerSKU.1'];
             $this->options['Action'] = 'GetProductCategoriesForSKU';
             $this->resetASINs();
         } else {
             if (array_key_exists('ASINList.ASIN.1', $this->options)) {
+                $this->options['ASIN']=$this->options['ASINList.ASIN.1'];
                 $this->options['Action'] = 'GetProductCategoriesForASIN';
                 $this->resetSKUs();
             }
