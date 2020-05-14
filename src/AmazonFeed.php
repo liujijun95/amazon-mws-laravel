@@ -314,7 +314,7 @@ class AmazonFeed extends AmazonFeedsCore
         $this->response['SubmittedDate'] = (string)$xml->SubmittedDate;
         $this->response['FeedProcessingStatus'] = (string)$xml->FeedProcessingStatus;
 
-        $this->log("Successfully submitted feed #" . $this->response['FeedSubmissionId'] . ' (' . $this->response['FeedType'] . ')');
+        //$this->log("Successfully submitted feed #" . $this->response['FeedSubmissionId'] . ' (' . $this->response['FeedType'] . ')');
     }
 
     /**

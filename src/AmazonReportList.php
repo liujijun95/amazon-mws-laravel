@@ -300,7 +300,7 @@ class AmazonReportList extends AmazonReportsCore implements \Iterator
 
         if ($this->tokenFlag && $this->tokenUseFlag && $r === true) {
             while ($this->tokenFlag) {
-                $this->log("Recursively fetching more Reports");
+                //$this->log("Recursively fetching more Reports");
                 $this->fetchReportList(false);
             }
 

@@ -302,7 +302,7 @@ class AmazonFeedList extends AmazonFeedsCore implements Iterator{
         
         if ($this->tokenFlag && $this->tokenUseFlag && $r === true){
             while ($this->tokenFlag){
-                $this->log("Recursively fetching more Feeds");
+                //$this->log("Recursively fetching more Feeds");
                 $this->fetchFeedSubmissions(false);
             }
             
@@ -364,7 +364,7 @@ class AmazonFeedList extends AmazonFeedsCore implements Iterator{
             $i = $this->index;
             if ($key == 'Count'){
                 $this->count = (string)$x;
-                $this->log("Successfully cancelled $this->count report requests.");
+                //$this->log("Successfully cancelled $this->count report requests.");
             }
             if ($key != 'FeedSubmissionInfo'){
                 continue;

@@ -137,7 +137,7 @@ class AmazonReport extends AmazonReportsCore
         try {
             //file_put_contents($path, $this->rawreport);
             Storage::put($path, $this->rawreport, 'public');
-            $this->log("Successfully saved report #" . $this->options['ReportId'] . " at $path");
+            //$this->log("Successfully saved report #" . $this->options['ReportId'] . " at $path");
             return true;
         } catch (Exception $e) {
             $this->log("Unable to save report #" . $this->options['ReportId'] . " at $path: $e", 'Urgent');

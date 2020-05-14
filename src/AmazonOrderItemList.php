@@ -169,7 +169,7 @@ class AmazonOrderItemList extends AmazonOrderCore implements Iterator
 
         if ($this->tokenFlag && $this->tokenUseFlag && $r === true) {
             while ($this->tokenFlag) {
-                $this->log("Recursively fetching more items");
+                //$this->log("Recursively fetching more items");
                 $this->fetchItems(false);
             }
         }

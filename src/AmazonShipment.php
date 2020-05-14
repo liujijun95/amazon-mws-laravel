@@ -298,7 +298,7 @@ class AmazonShipment extends AmazonInboundCore
         $this->shipmentId = (string)$xml->ShipmentId;
 
         if ($this->shipmentId) {
-            $this->log("Successfully created Shipment #" . $this->shipmentId);
+            //$this->log("Successfully created Shipment #" . $this->shipmentId);
             return true;
         } else {
             return false;
@@ -349,7 +349,7 @@ class AmazonShipment extends AmazonInboundCore
         $this->shipmentId = (string)$xml->ShipmentId;
 
         if ($this->shipmentId) {
-            $this->log("Successfully updated Shipment #" . $this->shipmentId);
+            //$this->log("Successfully updated Shipment #" . $this->shipmentId);
             return true;
         } else {
             return false;

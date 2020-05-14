@@ -170,7 +170,7 @@ class AmazonReportScheduleList extends AmazonReportsCore implements \Iterator
 
         if ($this->tokenFlag && $this->tokenUseFlag && $r === true) {
             while ($this->tokenFlag) {
-                $this->log("Recursively fetching more Report Schedules");
+                //$this->log("Recursively fetching more Report Schedules");
                 $this->fetchReportList(false);
             }
 

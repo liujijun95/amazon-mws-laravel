@@ -414,7 +414,7 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator
 
         if ($this->tokenFlag && $this->tokenUseFlag && $r === true) {
             while ($this->tokenFlag) {
-                $this->log("Recursively fetching more orders");
+                //$this->log("Recursively fetching more orders");
                 $this->fetchOrders(false);
             }
 

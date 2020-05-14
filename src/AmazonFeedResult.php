@@ -144,7 +144,7 @@ class AmazonFeedResult extends AmazonFeedsCore
         try {
             //file_put_contents($path, $this->rawFeed);
             Storage::put($path, $this->rawFeed, 'public');
-            $this->log("Successfully saved feed #" . $this->options['FeedSubmissionId'] . " at $path");
+            //$this->log("Successfully saved feed #" . $this->options['FeedSubmissionId'] . " at $path");
         } catch (Exception $e) {
             $this->log("Unable to save feed #" . $this->options['FeedSubmissionId'] . " at $path: " . $e->getMessage(),
                 'Urgent',$this->cacheKey);

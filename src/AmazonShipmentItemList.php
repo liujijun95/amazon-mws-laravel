@@ -207,7 +207,7 @@ class AmazonShipmentItemList extends AmazonInboundCore implements \Iterator
 
         if ($this->tokenFlag && $this->tokenUseFlag && $r === true) {
             while ($this->tokenFlag) {
-                $this->log("Recursively fetching more shipment items");
+                //$this->log("Recursively fetching more shipment items");
                 $this->fetchItems(false);
             }
 

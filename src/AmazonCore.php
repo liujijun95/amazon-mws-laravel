@@ -619,7 +619,7 @@ abstract class AmazonCore
     protected function sendRequest($url, $param)
     {
 
-        $this->log("Making request to Amazon: " . $this->options['Action']);
+        //$this->log("Making request to Amazon: " . $this->options['Action']);
         $response = $this->fetchURL($url, $param);
 
         if (!isset($response['code'])) {

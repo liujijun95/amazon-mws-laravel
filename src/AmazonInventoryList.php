@@ -206,7 +206,8 @@ class AmazonInventoryList extends AmazonInventoryCore implements \Iterator
 
         if ($this->tokenFlag && $this->tokenUseFlag && $r === true) {
             while ($this->tokenFlag) {
-                $this->log("Recursively fetching more Inventory Supplies");
+                //
+                //$this->log("Recursively fetching more Inventory Supplies");
                 $this->fetchInventoryList(false);
             }
 
