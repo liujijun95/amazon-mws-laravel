@@ -55,6 +55,14 @@ class AmazonFulfillmentOrderList extends AmazonOutboundCore implements \Iterator
         $this->options['Action'] = 'ListAllFulfillmentOrders';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Sets the start time. (Optional)
      *
@@ -153,7 +161,7 @@ class AmazonFulfillmentOrderList extends AmazonOutboundCore implements \Iterator
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
 
-            if (!$this->checkResponse($response)) {
+            if (!$this->checkResponse($response,$this->cacheKey)) {
                 return false;
             }
 

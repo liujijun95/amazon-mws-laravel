@@ -49,6 +49,14 @@ class AmazonFulfillmentOrderCreator extends AmazonOutboundCore
         $this->options['Action'] = 'CreateFulfillmentOrder';
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Sets the fulfillment order ID. (Required)
      *
@@ -492,7 +500,7 @@ class AmazonFulfillmentOrderCreator extends AmazonOutboundCore
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
         }
-        if (!$this->checkResponse($response)) {
+        if (!$this->checkResponse($response,$this->cacheKey)) {
             return false;
         } else {
             $this->log("Successfully created Fulfillment Order " . $this->options['SellerFulfillmentOrderId'] . " / " . $this->options['DisplayableOrderId']);

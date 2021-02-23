@@ -55,6 +55,14 @@ class AmazonFulfillmentOrder extends AmazonOutboundCore
         }
     }
 
+    public function setCachekey($cacheKey = ''){
+        if ($cacheKey){
+            $this->cacheKey = $cacheKey;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Sets the fulfillment order ID. (Required)
      *
@@ -278,7 +286,7 @@ class AmazonFulfillmentOrder extends AmazonOutboundCore
         } else {
             $response = $this->sendRequest($url, array('Post' => $query));
         }
-        if (!$this->checkResponse($response)) {
+        if (!$this->checkResponse($response,$this->cacheKey)) {
             return false;
         } else {
             $this->log("Successfully deleted Fulfillment Order " . $this->options['SellerFulfillmentOrderId']);
