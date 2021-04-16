@@ -188,6 +188,7 @@ class AmazonReportRequest extends AmazonReportsCore
         unset($this->options['EndDate']);
     }
 
+
     /**
      * Sets whether or not the report should return the Sales Channel column. (Optional)
      *
