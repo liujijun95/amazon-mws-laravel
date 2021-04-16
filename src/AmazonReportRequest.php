@@ -169,6 +169,12 @@ class AmazonReportRequest extends AmazonReportsCore
         }
     }
 
+    public function setTimeLimitsExact($s = null, $e = null)
+    {
+        $this->options['StartDate']=$s;
+        $this->options['EndDate']=$e;
+    }
+
     /**
      * Removes time limit options.
      *
