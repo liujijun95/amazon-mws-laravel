@@ -175,6 +175,7 @@ class AmazonReportRequest extends AmazonReportsCore
         $this->options['EndDate']=$e;
     }
 
+
     /**
      * Removes time limit options.
      *
